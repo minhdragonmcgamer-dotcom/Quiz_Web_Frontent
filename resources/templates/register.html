@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            width: 350px;
+            margin: 100px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        input, select {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1976D2;
+        }
+
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Đăng ký</h2>
+
+    <form action="/register" method="post">
+
+        <input type="text" name="username" placeholder="Username" required>
+
+        <input type="password" name="password" placeholder="Password" required>
+
+        <select name="role">
+            <option value="ROLE_STUDENT">Student</option>
+            <option value="ROLE_TEACHER">Teacher</option>
+        </select>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    <p class="error" th:text="${error}"></p>
+    <p class="success" th:text="${success}"></p>
+
+    <p>
+        Đã có tài khoản?
+        <a href="/login">Đăng nhập</a>
+    </p>
+</div>
+
+</body>
+</html>

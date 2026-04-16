@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher</title>
+</head>
+<body>
+
+<h1>Trang giáo viên</h1>
+
+<p>Bạn đang đăng nhập với vai trò TEACHER</p>
+
+<a href="/teacher/create">Tạo quiz mới</a><br>
+
+<br>
+
+<form th:action="@{/teacher/import}"
+      method="post"
+      enctype="multipart/form-data">
+
+    <input type="text" name="title" placeholder="Tiêu đề quiz" required><br><br>
+    <input type="file" name="file" accept=".xlsx" required>
+    <button type="submit">Import Excel</button>
+</form>
+
+<br>
+<a href="/quizzes">Xem các quiz</a><br><br>
+<a href="/logout">Đăng xuất</a>
+
+</body>
+</html>

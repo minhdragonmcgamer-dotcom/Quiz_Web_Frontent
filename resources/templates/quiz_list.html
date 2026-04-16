@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz List</title>
+</head>
+<body>
+
+<h2>Danh sách Quiz</h2>
+
+<div th:each="q : ${quizzes}">
+    <p th:text="${q.title}"></p>
+    <a th:href="@{'/quiz/' + ${q.quizId}}">Làm bài</a>
+    <a th:href="@{'/teacher/edit/' + ${q.quizId}}">Sửa</a>
+    <a th:href="@{'/teacher/delete/' + ${q.quizId}}">Xóa</a>
+</div>
+
+</body>
+</html>

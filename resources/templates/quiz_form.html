@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz Form</title>
+
+    <script>
+        function updateIndex() {
+            let questions = document.querySelectorAll(".question-block");
+
+            questions.forEach((q, index) => {
+                let i = index + 1;
+
+                // Update tiêu đề
+                q.querySelector(".q-title").innerText = "Câu " + i;
+
+                // Update name các input
+                q.querySelector(".q-content").name = "q_" + i;
+
+                let opts = q.querySelectorAll(".q-opt");
+                opts.forEach((opt, idx) => {
+                    opt.name = "q_" + i + "_opt" + (idx + 1);
+                });
+
+                q.querySelector(".q-correct").name = "q_" + i + "_correct";
+            });
+        }
+
+        function addQuestion() {
+            let container = document.getElementById("questions");
+
+            let html = `
+            <div class="question-block">
+                <p class="q-title">Câu</p>
+
+                <input type="text" class="q-content" placeholder="Nội dung câu hỏi" required><br>
+
+                <input type="text" class="q-opt" placeholder="Đáp án 1"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 2"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 3"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 4"><br>
+
+                Đáp án đúng:
+                <select class="q-correct">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+
+                <button type="button" onclick="removeQuestion(this)">Xóa</button>
+            </div>
+            `;
+
+            container.insertAdjacentHTML("beforeend", html);
+            updateIndex();
+        }
+
+        function removeQuestion(btn) {
+            btn.parentElement.remove();
+            updateIndex();
+        }
+
+        // chạy sau khi load trang
+        window.onload = function () {
+            updateIndex();
+        };
+    </script>
+</head>
+
+<body>
+
+<h2 th:text="${quiz.quizId == null ? 'Tạo Quiz' : 'Sửa Quiz'}"></h2>
+
+<form th:action="@{${action}}" method="post">
+
+    <!-- TITLE -->
+    <input type="text" name="title"
+           th:value="${quiz.title}"
+           placeholder="Tiêu đề quiz" required>
+
+    <br><br>
+
+    <!-- QUESTIONS -->
+    <div id="questions">
+
+        <!-- EDIT MODE -->
+        <div th:if="${quiz.questions != null and !#lists.isEmpty(quiz.questions)}"
+             th:each="q : ${quiz.questions}">
+
+            <div class="question-block">
+
+                <p class="q-title">Câu</p>
+
+                <input type="text"
+                       class="q-content"
+                       th:value="${q.content}" required><br>
+
+                <div th:each="optIndex : ${#numbers.sequence(1,4)}">
+                    <input type="text"
+                           class="q-opt"
+                           th:value="${q.options.size() >= optIndex ? q.options[optIndex-1].content : ''}"
+                           th:placeholder="|Đáp án ${optIndex}|">
+                    <br>
+                </div>
+
+                Đáp án đúng:
+                <select class="q-correct">
+                    <option th:each="optIndex : ${#numbers.sequence(1,4)}"
+                            th:value="${optIndex}"
+                            th:selected="${q.options.size() >= optIndex and q.options[optIndex-1].correct}">
+                        [[${optIndex}]]
+                    </option>
+                </select>
+
+                <button type="button" onclick="removeQuestion(this)">Xóa</button>
+
+            </div>
+        </div>
+
+        <!-- CREATE MODE -->
+        <div th:if="${quiz.questions == null or #lists.isEmpty(quiz.questions)}">
+
+            <div class="question-block">
+
+                <p class="q-title">Câu</p>
+
+                <input type="text" class="q-content" placeholder="Nội dung câu hỏi" required><br>
+
+                <input type="text" class="q-opt" placeholder="Đáp án 1"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 2"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 3"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 4"><br>
+
+                Đáp án đúng:
+                <select class="q-correct">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+
+                <button type="button" onclick="removeQuestion(this)">Xóa</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <br>
+    <button type="button" onclick="addQuestion()">+ Thêm câu hỏi</button>
+
+    <br><br>
+    <button type="submit">Lưu Quiz</button>
+
+</form>
+
+</body>
+</html>
