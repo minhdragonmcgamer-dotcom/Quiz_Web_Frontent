@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/teacher_layout :: layout(~{::section})">
+
+<section>
+
+<h2>My Quizzes</h2>
+
+<table>
+<tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Questions</th>
+    <th>Mode</th>
+    <th>Actions</th>
+</tr>
+
+<tr th:each="q : ${quizzes}">
+
+    <td th:text="${q.quizId}"> </td>
+
+    <td th:text="${q.title}"></td>
+
+    <td th:text="${#lists.size(q.questions)}"></td>
+
+    <td>
+        <span th:text="${q.isPublic ? 'Public' : 'Private'}"></span>
+    </td>
+
+    <td>
+        <a th:href="@{'/teacher/edit/' + ${q.quizId}}">Edit</a>
+        <a th:href="@{'/teacher/delete/' + ${q.quizId}}">Delete</a>
+        <a th:href="@{'/teacher/result/' + ${q.quizId}}">Scores</a>
+    </td>
+</tr>
+
+</table>
+
+</section>

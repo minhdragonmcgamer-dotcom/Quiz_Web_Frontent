@@ -1,0 +1,24 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/teacher_layout :: layout(~{::section})">
+
+<section>
+
+<h2>Import Quiz Excel</h2>
+
+<div class="card">
+
+<form th:action="@{/teacher/import}" method="post" enctype="multipart/form-data">
+
+    <input name="title" placeholder="Quiz title"><br><br>
+
+    <input type="file" name="file" accept=".xlsx"><br><br>
+
+    <button class="btn-primary">Import</button>
+
+</form>
+
+</div>
+
+</section>
+
+</html>

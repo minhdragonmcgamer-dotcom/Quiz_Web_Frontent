@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{fragments/admin_layout :: layout(~{::main})}">
+
+<body>
+
+<main>
+
+<h2>📈 Kết quả</h2>
+
+<table>
+    <tr>
+        <th>User</th>
+        <th>Quiz</th>
+        <th>Score</th>
+    </tr>
+
+    <tr th:each="r : ${results}">
+        <td th:text="${r.user.username}"></td>
+        <td th:text="${r.quiz.title}"></td>
+        <td>
+            <span th:text="${r.score}"></span> /
+            <span th:text="${r.totalQuestion}"></span>
+        </td>
+    </tr>
+</table>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/teacher_layout :: layout(~{::section})">
+
+<section>
+
+<h2>Classrooms</h2>
+
+<!-- CREATE CLASS -->
+<div class="card">
+
+<form method="post" action="/teacher/class/create">
+    <input name="name" placeholder="Class name" required>
+    <button class="btn btn-primary">Create</button>
+</form>
+
+</div>
+
+<!-- LIST CLASS -->
+<div class="card" th:each="c : ${classes}">
+
+    <h3 th:text="${c.name}"></h3>
+
+    <p><b>Teacher:</b> <span th:text="${c.teacher.username}"></span></p>
+
+    <hr>
+
+    <!-- ADD STUDENT -->
+    <form method="post" action="/teacher/class/add-student">
+        <input type="hidden" name="classId" th:value="${c.id}">
+        <input name="username" placeholder="Add student by username">
+        <button class="btn btn-primary">Add Student</button>
+    </form>
+
+    <!-- STUDENTS LIST -->
+    <h4>Students</h4>
+
+    <div th:each="s : ${c.students}" style="display:flex; gap:10px; align-items:center;">
+        <span th:text="${s.username}"></span>
+
+        <form method="post" action="/teacher/class/remove-student">
+            <input type="hidden" name="classId" th:value="${c.id}">
+            <input type="hidden" name="userId" th:value="${s.id}">
+            <button class="btn btn-danger">Remove</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <!-- ADD QUIZ -->
+    <h4>Attach Quiz</h4>
+        <form method="post" th:action="@{'/teacher/' + ${c.id} + '/add-quiz'}">
+        <select name="quizId">
+            <option th:each="q : ${quizzes}"
+                    th:value="${q.quizId}"
+                    th:text="${q.title}">
+            </option>
+        </select>
+
+        <button class="btn btn-warning">Add Quiz</button>
+    </form>
+
+    <!-- QUIZ LIST -->
+    <h4>Quizzes in class</h4>
+
+    <div th:each="q : ${c.quizzes}" style="display:flex; gap:10px; align-items:center;">
+        <span th:text="${q.title}"></span>
+
+        <form method="post" action="/teacher/class/remove-quiz">
+            <input type="hidden" name="classId" th:value="${c.id}">
+            <input type="hidden" name="quizId" th:value="${q.quizId}">
+            <button class="btn btn-danger">Remove</button>
+        </form>
+    </div>
+
+</div>
+
+</section>
+</html>

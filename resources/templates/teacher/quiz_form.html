@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/teacher_layout :: layout(~{::section})">
+
+<section>
+    <style>
+        .question-block {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #40739e;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .q-opt { margin: 5px 0; width: 80%; padding: 5px; }
+        .q-content { width: 100%; padding: 10px; margin-bottom: 10px; font-weight: bold; }
+        .settings-card { background: #eee; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+    </style>
+
+    <h2 th:text="${quiz.quizId == null ? 'Tạo Quiz' : 'Sửa Quiz'}"></h2>
+
+    <form th:action="@{${action}}" method="post">
+        
+        <input type="hidden" name="quizId" th:value="${quiz.quizId}">
+
+        <div class="card settings-card">
+            <label><b>Tiêu đề Quiz:</b></label>
+            <input type="text" name="title"
+                   th:value="${quiz.title}"
+                   style="width: 100%; padding: 10px; font-size: 1.2em; margin-bottom: 10px;"
+                   placeholder="Nhập tiêu đề quiz..." required>
+
+            <label><b>Chế độ hiển thị:</b></label>
+            <select name="isPublic" style="padding: 5px;">
+                <option value="true" th:selected="${quiz.isPublic == true}">Công khai (Public)</option>
+                <option value="false" th:selected="${quiz.isPublic == false}">Riêng tư (Private)</option>
+            </select>
+        </div>
+
+        <div id="questions">
+            <th:block th:if="${quiz.questions != null and !#lists.isEmpty(quiz.questions)}">
+                <div class="question-block" th:each="q, iStat : ${quiz.questions}">
+                    <p class="q-title">Câu [[${iStat.index + 1}]]</p>
+                    <input type="text" class="q-content" th:value="${q.content}" required><br>
+                    
+                    <div th:each="optIdx : ${#numbers.sequence(1,4)}">
+                        <input type="text" class="q-opt" 
+                               th:value="${q.options.size() >= optIdx ? q.options[optIdx-1].content : ''}"
+                               th:placeholder="|Đáp án ${optIdx}|">
+                    </div>
+
+                    Đáp án đúng:
+                    <select class="q-correct">
+                        <option th:each="idx : ${#numbers.sequence(1,4)}" 
+                                th:value="${idx}"
+                                th:selected="${q.options.size() >= idx and q.options[idx-1].correct}">[[${idx}]]</option>
+                    </select>
+                    <button type="button" onclick="removeQuestion(this)">Xóa</button>
+                </div>
+            </th:block>
+
+            <th:block th:if="${quiz.questions == null or #lists.isEmpty(quiz.questions)}">
+                <div class="question-block">
+                    <p class="q-title">Câu 1</p>
+                    <input type="text" class="q-content" placeholder="Nội dung câu hỏi" required><br>
+                    <input type="text" class="q-opt" placeholder="Đáp án 1"><br>
+                    <input type="text" class="q-opt" placeholder="Đáp án 2"><br>
+                    <input type="text" class="q-opt" placeholder="Đáp án 3"><br>
+                    <input type="text" class="q-opt" placeholder="Đáp án 4"><br>
+                    Đáp án đúng:
+                    <select class="q-correct">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <button type="button" onclick="removeQuestion(this)">Xóa</button>
+                </div>
+            </th:block>
+        </div>
+
+        <button type="button" onclick="addQuestion()">+ Thêm câu hỏi</button>
+        <hr>
+        <button type="submit" class="btn-primary" style="padding: 10px 25px; cursor: pointer;">Lưu Quiz</button>
+    </form>
+
+    <script>
+        function updateIndex() {
+            let questions = document.querySelectorAll(".question-block");
+            questions.forEach((q, index) => {
+                let i = index + 1;
+                q.querySelector(".q-title").innerText = "Câu " + i;
+                q.querySelector(".q-content").name = "q_" + i;
+                let opts = q.querySelectorAll(".q-opt");
+                opts.forEach((opt, idx) => {
+                    opt.name = "q_" + i + "_opt" + (idx + 1);
+                });
+                q.querySelector(".q-correct").name = "q_" + i + "_correct";
+            });
+        }
+
+        function addQuestion() {
+            let container = document.getElementById("questions");
+            let html = `
+            <div class="question-block">
+                <p class="q-title">Câu</p>
+                <input type="text" class="q-content" placeholder="Nội dung câu hỏi" required><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 1"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 2"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 3"><br>
+                <input type="text" class="q-opt" placeholder="Đáp án 4"><br>
+                Đáp án đúng: <select class="q-correct">
+                    <option value="1">1</option><option value="2">2</option>
+                    <option value="3">3</option><option value="4">4</option>
+                </select>
+                <button type="button" onclick="removeQuestion(this)">Xóa</button>
+            </div>`;
+            container.insertAdjacentHTML("beforeend", html);
+            updateIndex();
+        }
+
+        function removeQuestion(btn) {
+            btn.parentElement.remove();
+            updateIndex();
+        }
+
+        window.onload = updateIndex;
+    </script>
+</section>
+</html>

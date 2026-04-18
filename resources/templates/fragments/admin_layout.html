@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+    
+<head>
+    <title>Admin</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f5f6fa;
+        }
+
+        .header {
+            background: #2f3640;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #353b48;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background: #40739e;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-danger { background: #e84118; color: white; }
+        .btn-primary { background: #273c75; color: white; }
+        .btn-warning { background: #fbc531; }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <div>Admin Dashboard</div>
+    <div>
+        <a href="/logout" style="color:white;">Logout</a>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="sidebar">
+        <a href="/admin">📊 Dashboard</a>
+        <a href="/admin/users">👥 Users</a>
+        <a href="/admin/quizzes">📚 Quizzes</a>
+        <a href="/admin/results">📈 Results</a>
+    </div>
+
+    <div class="content">
+        <div th:replace="${content}">
+            </div>
+    </div>
+</div>
+
+</body>
+</html>

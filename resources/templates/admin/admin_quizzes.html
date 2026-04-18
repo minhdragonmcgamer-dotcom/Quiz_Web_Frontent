@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{fragments/admin_layout :: layout(~{::main})}">
+
+
+<body>
+
+<main>
+
+<h2>📚 Quản lý Quiz</h2>
+
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="q : ${quizzes}">
+        <td th:text="${q.title}"></td>
+
+        <td>
+            <a th:href="@{'/quiz/' + ${q.quizId}}">
+                <button class="btn-primary">View</button>
+            </a>
+
+            <a th:href="@{'/admin/quiz/delete/' + ${q.quizId}}"
+               onclick="return confirm('Xóa quiz?')">
+                <button class="btn-danger">Delete</button>
+            </a>
+        </td>
+    </tr>
+</table>
+
+</main>
+
+</body>
+</html>

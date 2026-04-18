@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/teacher_layout :: layout(~{::section})}">
+
+<section>
+
+<h2 th:text="'Results of Quiz: ' + ${quiz.title}"></h2>
+
+<div class="card">
+
+<table>
+    <tr>
+        <th>User</th>
+        <th>Score</th>
+        <th>Total</th>
+        <th>Percentage</th>
+    </tr>
+
+    <tr th:each="r : ${results}">
+        <td th:text="${r.user.username}"></td>
+        <td th:text="${r.score}"></td>
+        <td th:text="${r.totalQuestion}"></td>
+
+        <td>
+            <span th:text="${r.totalQuestion == 0 or r.score == 0 ? '0%' : 
+                #numbers.formatDecimal(r.score * 100.0 / r.totalQuestion, 0, 2) + '%'}"></span>
+        </td>
+    </tr>
+
+</table>
+
+</div>
+
+</section>
+</html>

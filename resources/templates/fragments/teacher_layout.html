@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content)">
+<head>
+    <title>Teacher Dashboard</title>
+
+    <style>
+        body { margin:0; font-family: Arial; background:#f5f6fa; }
+
+        .header {
+            background:#2f3640;
+            color:white;
+            padding:15px;
+            display:flex;
+            justify-content:space-between;
+        }
+
+        .container { display:flex; }
+
+        .sidebar {
+            width:220px;
+            background:#353b48;
+            min-height:100vh;
+            padding:15px;
+        }
+
+        .sidebar a {
+            display:block;
+            color:white;
+            text-decoration:none;
+            margin:10px 0;
+            padding:8px;
+        }
+
+        .sidebar a:hover { background:#40739e; }
+
+        .content {
+            flex:1;
+            padding:20px;
+        }
+
+        .card {
+            background:white;
+            padding:15px;
+            margin-bottom:10px;
+            border-radius:10px;
+        }
+
+        table { width:100%; border-collapse:collapse; }
+
+        th, td { padding:10px; border-bottom:1px solid #ddd; }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <div>Teacher Dashboard</div>
+    <a href="/logout" style="color:white;">Logout</a>
+</div>
+
+<div class="container">
+
+    <div class="sidebar">
+        <a href="/teacher">📊 My Quizzes</a>
+        <a href="/teacher/create">➕ Create Quiz</a>
+        <a href="/teacher/classes">🏫 Classes</a>
+        <a href="/teacher/import">📥 Import Excel</a>
+    </div>
+
+    <div class="content">
+        <div th:replace="${content}"></div>
+    </div>
+
+</div>
+
+</body>
+</html>

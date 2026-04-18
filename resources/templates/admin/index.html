@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{fragments/admin_layout :: layout(~{::main})}">
+
+
+<body>
+
+<main>
+
+    
+<h2>📊 Tổng quan</h2>
+
+<div class="card">
+    Tổng số Quiz: <b th:text="${quizCount}"></b>
+</div>
+
+<div class="card">
+    Tổng số User: <b th:text="${userCount}"></b>
+</div>
+
+<div class="card">
+    Tổng số lượt làm bài: <b th:text="${resultCount}"></b>
+</div>
+
+
+</main>
+</body>
+</html>
