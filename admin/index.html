@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin_layout :: layout(~{::main})}">
+
+<body>
+
+<main style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+
+    <h2 style="margin-bottom: 20px;">📊 System Overview</h2>
+
+    <table style="width: 100%; border-collapse: collapse; text-align: center;">
+
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th style="padding: 12px; border: 1px solid #ddd;">Statistic</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Value</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd;">
+                    Total Quizzes
+                </td>
+
+                <td style="padding: 12px; border: 1px solid #ddd;"
+                    th:text="${quizCount}">
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd;">
+                    Total Users
+                </td>
+
+                <td style="padding: 12px; border: 1px solid #ddd;"
+                    th:text="${userCount}">
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding: 12px; border: 1px solid #ddd;">
+                    Total Attempts
+                </td>
+
+                <td style="padding: 12px; border: 1px solid #ddd;"
+                    th:text="${resultCount}">
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</main>
+
+</body>
+</html>

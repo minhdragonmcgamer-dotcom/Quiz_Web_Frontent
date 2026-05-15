@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <title>Student Dashboard</title>
+    <style>
+        body { margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f5f6fa; }
+        .header {
+            background:#2f3640; color:white; padding:15px;
+            display:flex; justify-content:space-between;
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+        }
+        .container { display:flex; padding-top: 50px; }
+        .sidebar {
+            width:240px; background:#353b48; height:100vh;
+            padding:15px; display:flex; flex-direction:column; justify-content:space-between;
+            position: fixed; left: 0; top: 50px;
+        }
+        .sidebar a { display:block; color:white; text-decoration:none; margin:8px 0; padding:10px; border-radius: 5px; }
+        .sidebar a:hover { background:#40739e; }
+        .content { flex:1; padding:20px; margin-left: 270px; } 
+        .profile {
+            background:#2f3640; color:white; padding:15px;
+            border-radius:8px; margin-bottom: 70px; 
+        }
+        .logout-btn {
+            display: block; text-align: center; background: #e84118;
+            color: white; text-decoration: none; padding: 8px;
+            border-radius: 5px; margin-top: 10px; font-weight: bold;
+        }
+        .logout-btn:hover { background: #c23616; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>Student System</div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <div>
+                <a href="/student">📚 Public Quizzes</a>
+                <a href="/classes">🏫 My Classes</a>
+                <a href="/results">📊 My Results</a>
+            </div>
+            <div class="profile">
+                <div style="font-size: 0.9em; color: #dcdde1;">Logged in as:</div>
+                <div style="font-weight: bold; margin-bottom: 5px;" th:text="${session.user.username}"></div>
+                <div style="font-size: 0.85em;">ID: <span th:text="${session.user.studentCode}"></span></div>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+        </div>
+        <div class="content">
+            <div th:replace="${content}"></div>
+        </div>
+    </div>
+</body>
+</html>

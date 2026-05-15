@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/student_layout :: layout(~{::section})">
+
+<section style="max-width: 1000px; margin: 0 auto; padding: 20px;">
+    
+    <div style="margin-bottom: 30px;">
+        <h2 style="color: #2c3e50; margin: 0;">My Results</h2>
+    </div>
+
+    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <table style="width: 100%; border-collapse: collapse; text-align: center;">
+            <thead>
+                <tr style="background-color: #f8f9fa; color: #2c3e50;">
+                    <th style="padding: 15px; border-bottom: 2px solid #dee2e6;">Quiz</th>
+                    <th style="padding: 15px; border-bottom: 2px solid #dee2e6;">Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${results}" style="transition: background 0.3s;" onmouseover="this.style.backgroundColor='#f1f8ff'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 12px; border-bottom: 1px solid #eee; font-weight: 500;" th:text="${r.quiz.title}"></td>
+                    <td style="padding: 12px; border-bottom: 1px solid #eee;">
+                        <span style="font-size: 1.1rem; color: #1a73e8; font-weight: bold;" th:text="${r.score}"></span>
+                        <span style="color: #666;" th:text="' / ' + ${r.totalQuestion}"></span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(results)}">
+                    <td colspan="2" style="padding: 30px; color: #999;">You have not taken any quizzes yet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</html>

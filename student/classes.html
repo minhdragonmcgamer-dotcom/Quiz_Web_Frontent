@@ -1,0 +1,57 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/student_layout :: layout(~{::section})">
+
+<section style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    
+    <div style="margin-bottom: 30px;">
+        <h2 style="color: #2c3e50; margin: 0;">My Classrooms</h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px;">
+        
+        <div class="card" th:each="c : ${classes}" 
+             style="background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; padding: 20px; border: none;">
+            
+            <div style="border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 th:text="${c.name}" style="color: #1a73e8; margin: 0; font-size: 1.3rem;"></h3>
+                <span style="font-size: 0.85rem; background: #e8f0fe; color: #1a73e8; padding: 4px 10px; border-radius: 20px;" 
+                      th:text="'Teacher: ' + ${c.teacher.username}"></span>
+            </div>
+                <div style="background: #fff8f0; padding: 15px; border-radius: 8px;">
+                    <h4 style="margin-top: 0; font-size: 0.95rem; color: #d35400; border-left: 4px solid #f39c12; padding-left: 10px; margin-bottom: 10px;">
+                        Quizzes Assigned:
+                    </h4>
+                    
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <table style="width: 100%; font-size: 0.9rem; border-collapse: collapse;">
+                            <tr th:each="a : ${c.assignments}" style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 8px 0; color: #333;">
+                                    <div style="font-weight: bold;" th:text="${a.quiz?.title ?: 'Unknown Quiz'}"></div>
+
+                                    <div style="font-size: 0.8rem; color: #888; margin-top: 3px;"
+                                        th:if="${a.startTime != null and a.endTime != null}">
+                                        ⏱ 
+                                        <span th:text="${#temporals.format(a.startTime, 'dd/MM HH:mm')}"></span>
+                                        -
+                                        <span th:text="${#temporals.format(a.endTime, 'dd/MM HH:mm')}"></span>
+                                    </div>
+                                </td>
+
+                                <td style="text-align: right; padding: 8px 0;">
+                                    <a th:href="@{'/assignment/' + ${a.id}}" 
+                                    style="background: #f39c12; color: white; padding: 4px 12px; border-radius: 4px; text-decoration: none; font-size: 0.8rem; font-weight: bold;">
+                                        Do Quiz
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- Nếu không có bài tập nào -->
+                            <tr th:if="${#lists.isEmpty(c.assignments)}">
+                                <td colspan="2" style="text-align: center; color: #999; padding: 10px;">No assignments found.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+        </div>
+    </div>
+</section>
+</html>

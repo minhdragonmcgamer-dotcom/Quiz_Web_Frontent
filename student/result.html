@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/student_layout :: layout(~{::section})}">
+
+<section style="max-width: 500px; margin: 60px auto; padding: 20px;">
+    
+    <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; border-top: 6px solid #273c75;">
+        
+        <h2 style="color: #2f3640; margin-bottom: 30px; font-size: 1.6rem; font-family: sans-serif;">Quiz Result</h2>
+
+        <div style="margin-bottom: 20px;">
+            <p style="font-size: 1.1rem; color: #7f8c8d; margin-bottom: 5px;">Correct Answers</p>
+            <div style="font-size: 2.5rem; font-weight: bold; color: #2f3640;">
+                <span th:text="${score}">0</span> / <span th:text="${total}">0</span>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 40px; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+            <p style="margin: 0; color: #2f3640; font-size: 1rem;">
+                Accuracy: <strong th:text="${(score * 100) / total} + '%'">0%</strong>
+            </p>
+        </div>
+
+        <a href="/student" class="btn-back">Back to List</a>
+
+    </div>
+
+    <style>
+        .btn-back {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 40px;
+            background: #273c75;
+            color: white;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #192a56;
+            color: white;
+        }
+    </style>
+</section>
+
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/teacher_layout :: layout(~{::section})}">
+
+<section style="max-width: 1200px; margin-left: 0; padding: 20px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2 style="color: #2c3e50; margin: 0;">🏫 Classrooms Management</h2>
+        
+        <div style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <form method="post" action="/teacher/class/create" style="display: flex; gap: 10px;">
+                <input name="name" placeholder="New Class Name" required 
+                       style="padding: 8px 15px; border: 1px solid #ddd; border-radius: 4px; outline: none; width: 200px;">
+                <button class="btn btn-primary" style="padding: 8px 20px;">+ Create Class</button>
+            </form>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(550px, 1fr)); gap: 25px;">
+        
+        <div class="card" th:each="c : ${classes}" 
+             style="background: #fff; border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; padding: 20px;">
+            
+            <div style="border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;">
+
+            <div>
+                <h3 th:text="${c.name}"
+                    style="color: #1a73e8;
+                        margin: 0;
+                        font-size: 1.5rem;">
+                </h3>
+
+                <span style="font-size: 0.9rem; color: #666;">
+                    Teacher:
+                    <strong th:text="${c.teacher.username}"></strong>
+                </span>
+            </div>
+
+            <form method="post"
+                action="/teacher/class/delete"
+                onsubmit="return confirm('Delete this classroom?');"
+                style="margin:0;">
+
+                <input type="hidden"
+                    name="classId"
+                    th:value="${c.id}">
+
+                <button class="btn btn-danger"
+                        style="padding:6px 12px;
+                            font-size:0.8rem;">
+                    Delete Class
+                </button>
+
+            </form>
+
+        </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <h4 style="margin-top: 0; font-size: 1rem; color: #444; border-left: 4px solid #1a73e8; padding-left: 10px;">Students</h4>
+                    
+                    <form method="post" action="/teacher/class/add-student" style="margin-bottom: 15px;">
+
+                        <input type="hidden" name="classId" th:value="${c.id}">
+
+                        <div style="display: flex; gap: 8px; margin-bottom: 5px;">
+
+                            <textarea name="studentCodes"
+                                    class="student-input"
+                                    placeholder="Paste student codes here"
+                                    style="flex:1; min-height:50px; padding: 8px;
+                                            border: 1px solid #ddd; border-radius: 4px;
+                                            font-size: 0.85rem; resize: vertical;"></textarea>
+
+                            <button type="button"
+                                    class="expand-btn"
+                                    style="padding: 0 12px;
+                                        border: none;
+                                        border-radius: 4px;
+                                        background: #40739e;
+                                        color: white;
+                                        cursor: pointer;">
+                                ⛶
+                            </button>
+                        </div>
+
+                        <button class="btn btn-primary"
+                                style="width: 100%; font-size: 0.8rem;">
+                            Add Students
+                        </button>
+
+                    </form>
+
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <table style="width: 100%; font-size: 0.9rem; border-collapse: collapse;">
+                            <tr th:each="s : ${c.students}" style="border-bottom: 1px solid #eee;">
+                                <td th:text="${s.studentCode}" style="padding: 5px 0;"></td>
+                                <td style="text-align: right; padding: 5px 0;">
+                                    <form method="post" action="/teacher/class/remove-student" style="margin: 0;">
+                                        <input type="hidden" name="classId" th:value="${c.id}">
+                                        <input type="hidden" name="userId" th:value="${s.id}">
+                                        <button class="btn btn-danger" style="padding: 2px 8px; font-size: 0.75rem;">✕</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="background: #fff8f0; padding: 15px; border-radius: 8px;">
+                    <h4 style="margin-top: 0; font-size: 1rem; color: #444; border-left: 4px solid #f39c12; padding-left: 10px;">Assignments</h4>
+                    
+                    <form method="post" th:action="@{'/teacher/' + ${c.id} + '/add-quiz'}" style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;">
+                        <select name="quizId" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option th:each="q : ${quizzes}" th:value="${q.quizId}" th:text="${q.title}"></option>
+                        </select>
+
+
+                        <input type="datetime-local" name="startTime" required>
+                        <input type="datetime-local" name="endTime" required>
+
+                        <input type="number" name="timeLimit" placeholder="Time limit (default = quiz limit)">
+
+
+                        <button class="btn btn-warning" style="width: 100%; font-size: 0.8rem; color: #fff;">Attach Quiz</button>
+                    </form>
+
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        <table style="width: 100%; font-size: 0.9rem; border-collapse: collapse;">
+
+                            <tr th:each="a : ${c.assignments}"
+                                style="border-bottom: 1px solid #eee;">
+
+                                <td style="padding: 8px 0;">
+
+                                    <div style="font-weight: 600; color: #2c3e50;"
+                                        th:text="${a.quiz.title}">
+                                    </div>
+
+                                    <div th:if="${a.startTime != null and a.endTime != null}"
+                                        style="font-size: 0.78rem;
+                                                color: #777;
+                                                margin-top: 4px;
+                                                line-height: 1.5;">
+
+                                        ⏰
+                                        <span th:text="${#temporals.format(a.startTime, 'dd/MM/yyyy HH:mm')}"></span>
+
+                                        <br>
+
+                                        →
+                                        <span th:text="${#temporals.format(a.endTime, 'dd/MM/yyyy HH:mm')}"></span>
+
+                                    </div>
+
+                                    <div th:if="${a.timeLimit != null or a.quiz.timeLimit != null}"
+                                        style="font-size: 0.78rem;
+                                                color: #e67e22;
+                                                margin-top: 4px;">
+
+                                        ⌛ <span th:text="${a.timeLimit ?: a.quiz.timeLimit}"></span> minutes
+                                    </div>
+
+                                </td>
+
+                                <td style="text-align: right; width: 60px; vertical-align: top;">
+
+                                    <form method="post"
+                                        action="/teacher/class/remove-quiz"
+                                        style="margin: 0;">
+
+                                        <input type="hidden"
+                                            name="classId"
+                                            th:value="${c.id}">
+
+                                        <input type="hidden"
+                                            name="quizId"
+                                            th:value="${a.quiz.quizId}">
+
+                                        <button class="btn btn-danger"
+                                                style="padding: 2px 8px;
+                                                    font-size: 0.75rem;">
+                                            ✕
+                                        </button>
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- EXPAND MODAL -->
+<div id="studentModal"
+     style="display:none;
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.5);
+            z-index:99999;
+            justify-content:center;
+            align-items:center;">
+
+    <div style="background:white;
+                width:80%;
+                max-width:900px;
+                border-radius:12px;
+                padding:20px;
+                box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+
+        <div style="display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    margin-bottom:15px;">
+
+            <h3 style="margin:0;">Student Codes Preview</h3>
+
+            <button id="closeModal"
+                    style="border:none;
+                           background:#e84118;
+                           color:white;
+                           width:35px;
+                           height:35px;
+                           border-radius:50%;
+                           cursor:pointer;">
+                ✕
+            </button>
+        </div>
+
+        <textarea id="modalTextarea"
+                  style="width:100%;
+                         height:400px;
+                         padding:12px;
+                         border:1px solid #ccc;
+                         border-radius:8px;
+                         font-size:0.95rem;
+                         resize:vertical;"></textarea>
+    </div>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const modal = document.getElementById("studentModal");
+    const modalTextarea = document.getElementById("modalTextarea");
+    const closeBtn = document.getElementById("closeModal");
+
+    let currentTextarea = null;
+
+    document.querySelectorAll(".expand-btn").forEach(btn => {
+
+        btn.addEventListener("click", function () {
+
+            currentTextarea =
+                btn.closest("form").querySelector(".student-input");
+
+            modalTextarea.value = currentTextarea.value;
+
+            modal.style.display = "flex";
+        });
+
+    });
+
+    modalTextarea.addEventListener("input", function () {
+
+        if (currentTextarea) {
+            currentTextarea.value = modalTextarea.value;
+        }
+
+    });
+
+    closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    modal.addEventListener("click", function (e) {
+
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+
+    });
+
+});
+
+</script>
+
+</section>
+
+
+</html>

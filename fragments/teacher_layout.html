@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <title>Teacher Dashboard</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body { margin:0; font-family: Arial; background:#f5f6fa; overflow-x: hidden; }
+        .header { background:#2f3640; color:white; padding:15px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .container { display:flex; padding-top: 50px; }
+        .sidebar {
+            width:220px; background:#353b48; height:100vh;
+            padding:15px; position: fixed; left: 0; top: 50px;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .sidebar a { display:block; color:white; text-decoration:none; margin:10px 0; padding:8px; border-radius: 4px; }
+        .sidebar a:hover { background:#40739e; }
+        .content { flex:1; padding:20px; margin-left: 250px; }
+        .profile { background:#2f3640; color:white; padding:15px; border-radius:8px; margin-bottom: 70px; }
+        .logout-btn { display: block; text-align: center; background: #e84118; color: white; text-decoration: none; padding: 8px; border-radius: 5px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">Teacher Dashboard</div>
+    <div class="container">
+        <div class="sidebar">
+            <div>
+                <a href="/teacher">📊 My Quizzes</a>
+                <a href="/teacher/create">➕ Create Quiz</a>
+                <a href="/teacher/classes">🏫 Classrooms</a>
+                <a href="/teacher/import">📥 Import Data</a>
+            </div>
+            <div class="profile">
+                <div style="font-size: 0.8em; opacity: 0.8;">Teacher Account</div>
+                <div th:text="${session.user.username}" style="font-weight: bold;"></div>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+        </div>
+        <div class="content"><div th:replace="${content}"></div></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="fragments/teacher_layout :: layout(~{::section})">
+
+<section style="max-width: 1200px; margin-left: 0; padding: 20px;">
+
+<h2 th:text="'Import vào quiz: ' + ${quiz.title}"></h2>
+
+<div class="card">
+
+<form th:action="@{'/teacher/import/' + ${quiz.quizId}}"
+      method="post"
+      enctype="multipart/form-data">
+
+    <input type="file" name="file" accept=".xlsx" required>
+
+    <br><br>
+
+    <button class="btn btn-primary">Import thêm câu hỏi</button>
+
+</form>
+
+</div>
+
+</section>
+</html>
