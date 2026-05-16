@@ -90,104 +90,97 @@
     </style>
 
 
-<script th:inline="javascript">
-document.addEventListener("DOMContentLoaded", function () {
+    <script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
 
-    let timeLimit = parseInt([[${assignment?.timeLimit != null ? assignment.timeLimit * 60 
-        : (quiz?.timeLimit != null ? quiz.timeLimit * 60 : -1)}]]) ;
+        let timeLimit = parseInt([[${assignment?.timeLimit != null ? assignment.timeLimit * 60 
+            : (quiz?.timeLimit != null ? quiz.timeLimit * 60 : -1)}]]) ;
 
-    const form = document.querySelector("form");
-    const timerDisplay = document.getElementById("timer");
+        const form = document.querySelector("form");
+        const timerDisplay = document.getElementById("timer");
 
-    let isSubmitting = false;
+        let isSubmitting = false;
 
-    function formatTime(seconds) {
-        let m = Math.floor(seconds / 60);
-        let s = seconds % 60;
-        return (m < 10 ? "0" : "") + m + ":" +
-               (s < 10 ? "0" : "") + s;
-    }
-
-    // ================= TIMER =================
-    if (timeLimit !== -1 && timerDisplay) {
-
-        if (timeLimit <= 0) {
-            alert("Time's up!");
-            isSubmitting = true;
-            if (form) form.submit();
-            return;
+        function formatTime(seconds) {
+            let m = Math.floor(seconds / 60);
+            let s = seconds % 60;
+            return (m < 10 ? "0" : "") + m + ":" +
+                (s < 10 ? "0" : "") + s;
         }
 
-        timerDisplay.innerText = formatTime(timeLimit);
-
-        const interval = setInterval(() => {
-            timeLimit--;
-
-            if (timeLimit <= 0) {
-                clearInterval(interval);
-                timerDisplay.innerText = "00:00";
-                alert("Time's up!");
-                isSubmitting = true;
-                if (form) form.submit();
-                return;
-            }
+        // ================= TIMER =================
+        if (timeLimit !== -1 && timerDisplay) {
 
             timerDisplay.innerText = formatTime(timeLimit);
 
-        }, 1000);
-    }
+            const interval = setInterval(() => {
+                timeLimit--;
 
-    // ================= SUBMIT =================
-    if (form) {
-        form.addEventListener("submit", function () {
-            isSubmitting = true; 
+                if (timeLimit <= 0) {
+                    clearInterval(interval);
+                    timerDisplay.innerText = "00:00";
+                    alert("Time's up!");
+                    isSubmitting = true;
+                    if (form) form.submit();
+                    return;
+                }
+
+                timerDisplay.innerText = formatTime(timeLimit);
+
+            }, 1000);
+        }
+
+        // ================= SUBMIT =================
+        if (form) {
+            form.addEventListener("submit", function () {
+                isSubmitting = true; 
+            });
+        }
+
+        // ================= CHẶN CLICK LINK =================
+        document.querySelectorAll("a[href]").forEach(link => {
+            link.addEventListener("click", function (e) {
+
+                if (isSubmitting) return;
+
+                const confirmLeave = confirm("You haven't submitted your answers. Do you want to submit before leaving?");
+
+                if (confirmLeave) {
+                    e.preventDefault();
+                    isSubmitting = true;
+                    if (form) form.submit();
+                }
+            });
         });
-    }
 
-    // ================= CHẶN CLICK LINK =================
-    document.querySelectorAll("a[href]").forEach(link => {
-        link.addEventListener("click", function (e) {
+        // ================= CHẶN BACK BUTTON FIX =================
+        history.pushState(null, null, location.href);
+
+        window.addEventListener("popstate", function () {
 
             if (isSubmitting) return;
 
-            const confirmLeave = confirm("You haven't submitted your answers. Do you want to submit before leaving?");
+            const confirmLeave = confirm("Submit before leaving?");
 
             if (confirmLeave) {
-                e.preventDefault();
                 isSubmitting = true;
                 if (form) form.submit();
+            } else {
+                history.pushState(null, null, location.href);
             }
         });
+
+        // ================= CHẶN RELOAD / ĐÓNG TAB =================
+        window.addEventListener("beforeunload", function (e) {
+            if (isSubmitting) return;
+
+            e.preventDefault();
+            e.returnValue = ""; 
+        });
+
+
     });
-
-    // ================= CHẶN BACK BUTTON FIX =================
-    history.pushState(null, null, location.href);
-
-    window.addEventListener("popstate", function () {
-
-        if (isSubmitting) return;
-
-        const confirmLeave = confirm("Submit before leaving?");
-
-        if (confirmLeave) {
-            isSubmitting = true;
-            if (form) form.submit();
-        } else {
-            history.pushState(null, null, location.href);
-        }
-    });
-
-    // ================= CHẶN RELOAD / ĐÓNG TAB =================
-    window.addEventListener("beforeunload", function (e) {
-        if (isSubmitting) return;
-
-        e.preventDefault();
-        e.returnValue = ""; 
-    });
-
-
-});
-</script>
+    </script>
 
 
 
